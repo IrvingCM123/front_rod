@@ -109,8 +109,12 @@ export class HomeComponent implements OnInit {
   }
 
   updateCartTotal(): void {
-    this.cartTotal = this.cartItems.reduce((sum, item) => sum + item.total, 0);
+    this.cartTotal = this.cartItems
+      .reduce((sum, item) => sum + item.total, 0);
+
+    this.cartTotal = Number(this.cartTotal);
   }
+
 
   incrementQuantity(item: CartItem): void {
     if (item.cartQuantity < item.quantity) {
@@ -184,8 +188,10 @@ export class HomeComponent implements OnInit {
     this.ventaRealizada = false;
   }
 
-  generarPDF(): void {
+  async generarPDF(){
+
     const DATA = document.getElementById('pdfContent');
+
     if (!DATA) {
       this.showToastMessage('Error al generar el PDF. Elemento no encontrado.', false);
       return;
@@ -197,7 +203,7 @@ export class HomeComponent implements OnInit {
     // Hacemos visible el elemento temporalmente
     DATA.style.display = 'block';
 
-    html2canvas(DATA).then((canvas) => {
+    await html2canvas(DATA).then(async (canvas) => {
       // Restauramos el estilo original
       DATA.style.display = originalStyle;
 
@@ -206,9 +212,11 @@ export class HomeComponent implements OnInit {
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       let heightLeft = imgHeight;
       let position = 0;
-      heightLeft -= pageHeight;
+
       const doc = new jsPDF('p', 'mm');
       doc.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
+
+      heightLeft -= pageHeight;
 
       while (heightLeft >= 0) {
         position = heightLeft - imgHeight;
@@ -217,21 +225,102 @@ export class HomeComponent implements OnInit {
         heightLeft -= pageHeight;
       }
 
-      doc.save(`venta_${new Date().toISOString()}.pdf`);
-      this.showToastMessage('PDF generado con éxito', true);
+      // Generar el archivo como Blob
+      const pdfBlob = doc.output('blob');
+
+      // Convertir el Blob en un archivo con nombre específico
+      const pdfFile = new File([pdfBlob], `venta_${new Date().toISOString()}.pdf`, { type: 'application/pdf' });
+
+      // Crear un enlace temporal para abrir el PDF e imprimirlo
+      const pdfURL = URL.createObjectURL(pdfBlob);
+      const newWindow = window.open(pdfURL, '_blank');
+
+      if (newWindow) {
+        newWindow.onload = () => {
+          URL.revokeObjectURL(pdfURL);
+        };
+      } else {
+        console.error('No se pudo abrir la ventana para imprimir el PDF.');
+      }
+
     }).catch((error) => {
       // Aseguramos que el estilo se restaure incluso si hay un error
       DATA.style.display = originalStyle;
       console.error('Error al generar el PDF:', error);
       this.showToastMessage('Error al generar el PDF', false);
     });
+
+  }
+
+  async generarPDFEmail(){
+
+    const DATA = document.getElementById('pdfContent');
+
+    if (!DATA) {
+      this.showToastMessage('Error al generar el PDF. Elemento no encontrado.', false);
+      return;
+    }
+
+    // Guardamos el estilo original
+    const originalStyle = DATA.style.display;
+
+    // Hacemos visible el elemento temporalmente
+    DATA.style.display = 'block';
+
+    const pdf = await html2canvas(DATA).then(async (canvas) => {
+      // Restauramos el estilo original
+      DATA.style.display = originalStyle;
+
+      const imgWidth = 208;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      const doc = new jsPDF('p', 'mm');
+      doc.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
+
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
+        heightLeft -= pageHeight;
+      }
+
+      // Generar el archivo como Blob
+      const pdfBlob = doc.output('blob');
+
+      // Convertir el Blob en un archivo con nombre específico
+      const pdfFile = new File([pdfBlob], `venta_${new Date().toISOString()}.pdf`, { type: 'application/pdf' });
+    
+      return pdfFile;
+    }).catch((error) => {
+      // Aseguramos que el estilo se restaure incluso si hay un error
+      DATA.style.display = originalStyle;
+      console.error('Error al generar el PDF:', error);
+      this.showToastMessage('Error al generar el PDF', false);
+    });
+
+    return pdf;
+
   }
 
 
-  enviarPorCorreo(): void {
+  async enviarPorCorreo(): Promise<void> {
     if (this.ultimaVenta && this.ultimaVenta.cliente && this.ultimaVenta.cliente.email) {
-      console.log(`Enviando PDF al correo: ${this.ultimaVenta.cliente.email}`);
-      this.showToastMessage(`PDF enviado al correo ${this.ultimaVenta.cliente.email}`, true);
+      (async () => {
+        const pdfFile = await this.generarPDFEmail();
+        const response: response = await this.homeService.enviarEmail(this.ultimaVenta, pdfFile)
+
+        if (response.httpStatusCode == 201) {
+          alert(response.mensajeRespuesta)
+        }
+        if (response.httpStatusCode == 500) {
+          alert(response.mensajeRespuesta)
+        }
+      })();
     } else {
       this.showToastMessage('No se pudo enviar el correo. Información del cliente incompleta.', false);
     }
