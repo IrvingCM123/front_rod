@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ventas</title>
+    <link rel="stylesheet" href="home.component.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <app-header></app-header>
+        <app-nav-bar></app-nav-bar>
+
+        <main class="main-content">
+
+            <!-- Sección para buscar clientes registrados -->
+            <div class="search-clients">
+                <input type="text" id="search-client" placeholder="Ingrese nombre o ID del cliente"
+                    (input)="onClientSearch($event)" class="input-busqueda">
+                <ul *ngIf="filteredClients.length > 0" class="lista-resultados">
+                    <li *ngFor="let client of filteredClients" (click)="selectClient(client)" class="resultado-item">
+                        {{ client.name }}
+                    </li>
+                </ul>
+            </div>
+
+            <section class="col-span-3 row-start-2 list-container" *ngIf="selectedClient">
+                <h2>Información del Cliente Seleccionado</h2>
+                <table class="client-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Dirección</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ selectedClient.name}}</td>
+                            <td>{{ selectedClient.phone}}</td>
+                            <td>{{ selectedClient.email}}</td>
+                            <td>{{ selectedClient.address}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+
+            <!-- Sección para buscar productos y mostrar el resumen de venta -->
+            <section class="search-products">
+                <h2>Resumen de Venta</h2>
+                <div class="product-search">
+                    <input type="text" id="search-product" placeholder="Ingrese nombre o código del producto"
+                        (input)="onProductSearch($event)" class="input-busqueda">
+                    <ul *ngIf="filteredProducts.length > 0" class="plista-resultados">
+                        <li *ngFor="let product of filteredProducts" (click)="selectProduct(product)"
+                            class="presultado-item">
+                            {{ product.name }} - ${{ product.price }}
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Resumen de productos seleccionados -->
+                <div class="cart-summary">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-items">
+                            <tr *ngFor="let item of cartItems; let i = index">
+                                <td>{{ item.name }}</td>
+                                <td>
+                                    <div class="quantity-selector">
+                                        <button (click)="decrementQuantity(item)">-</button>
+                                        <input type="number" [(ngModel)]="item.cartQuantity"
+                                            (ngModelChange)="updateCartItem(i)" min="1" [max]="item.quantity">
+                                        <button (click)="incrementQuantity(item)">+</button>
+                                    </div>
+                                </td>
+                                <td>{{ item.price | currency:'MXN':'symbol':'1.2-2' }}</td>
+                                <td>{{ item.total | currency:'MXN':'symbol':'1.2-2' }}</td>
+                                <td>
+                                    <button (click)="removeItem(item)" class="remove-item-btn">Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="total">
+                        <strong>Total de la Venta:</strong> <span id="total-price">{{ cartTotal |
+                            currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+
+                    <div class="venta">
+                        <button type="button" (click)="realizarVenta()" class="submit-btn" *ngIf="!ventaRealizada">Realizar Venta</button>
+                        <!-- <div *ngIf="ventaRealizada">
+                            <button (click)="openModal()" class="action-btn">Acciones de Venta</button>
+                        </div> -->
+                    </div>
+                    
+                    <!-- Modal -->
+                    <div id="ventaModal" class="modal" [ngClass]="{'show': isModalOpen}">
+                        <div class="modal-content">
+                            <span class="close" (click)="closeModal()">&times;</span>
+                            <button (click)="generarPDF()" class="action-btn">Imprimir PDF</button>
+                            <button (click)="enviarPorCorreo()" class="action-btn">Enviar por Correo</button>
+                        </div>
+                    </div>
+
+                    <!-- Contenido para generar PDF -->
+                    <div id="pdfContent" style="position: fixed; left: -9999px; top: -9999px; width: 210mm;">
+                        <div style="padding: 20mm; background: white;">
+                            <h2 style="text-align: center; margin-bottom: 20px;">Resumen de Venta</h2>
+                            <div *ngIf="ultimaVenta?.cliente">
+                                <h3 style="margin-bottom: 10px;">Información del Cliente</h3>
+                                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 4px;">
+                                    <p style="margin: 5px 0;">Nombre: {{ ultimaVenta.cliente.name }}</p>
+                                    <p style="margin: 5px 0;">Teléfono: {{ ultimaVenta.cliente.phone }}</p>
+                                    <p style="margin: 5px 0;">Email: {{ ultimaVenta.cliente.email }}</p>
+                                    <p style="margin: 5px 0;">Dirección: {{ ultimaVenta.cliente.address }}</p>
+                                </div>
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid black; padding: 8px; background-color: #f2f2f2;">
+                                            Producto</th>
+                                        <th style="border: 1px solid black; padding: 8px; background-color: #f2f2f2;">
+                                            Cantidad</th>
+                                        <th style="border: 1px solid black; padding: 8px; background-color: #f2f2f2;">
+                                            Precio Unitario</th>
+                                        <th style="border: 1px solid black; padding: 8px; background-color: #f2f2f2;">
+                                            Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of ultimaVenta?.productos">
+                                        <td style="border: 1px solid black; padding: 8px;">{{ item.nombre }}</td>
+                                        <td style="border: 1px solid black; padding: 8px;">{{ item.cantidad }}</td>
+                                        <td style="border: 1px solid black; padding: 8px;">{{ item.precioUnitario |
+                                            currency:'MXN':'symbol':'1.2-2' }}</td>
+                                        <td style="border: 1px solid black; padding: 8px;">{{ item.total |
+                                            currency:'MXN':'symbol':'1.2-2' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="margin-bottom: 20px;">
+                                <strong>Total de la Venta: </strong>
+                                <span>{{ ultimaVenta?.totalVenta | currency:'MXN':'symbol':'1.2-2' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Toast Notification -->
+                    <div class="toast" *ngIf="showToast"
+                        [ngClass]="{ 'success-toast': isSuccess, 'error-toast': !isSuccess }">
+                        <span>{{ toastMessage }}</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

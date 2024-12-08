@@ -1,0 +1,460 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f0f4f8;
+}
+
+/* Contenido principal */
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Secciones */
+section {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.search-clients {
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff8a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    padding: 20px;
+}
+
+.input-busqueda {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.lista-resultados {
+    position: absolute;
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    margin-top: 50px;
+}
+
+.plista-resultados {
+    position: absolute;
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    margin-top: 10px;
+}
+
+.resultado-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.presultado-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.client-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.resultado-item:hover {
+    background-color: #f0f0f0;
+}
+
+.presultado-item:hover {
+    background-color: #f0f0f0;
+}
+
+.list-container {
+    background-color: #ffffff8a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.client-table th,
+.client-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.client-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    color: #333;
+}
+
+.client-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.client-table tr:hover {
+    background-color: #eaf4ff;
+    /* Color al pasar el cursor */
+}
+
+/* Espacio entre celdas */
+.client-table td {
+    vertical-align: middle;
+    /* Alinea verticalmente los datos */
+}
+
+.grid {
+    display: grid;
+}
+
+.grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-rows-2 {
+    grid-template-rows: auto auto;
+}
+
+.gap-4 {
+    gap: 16px;
+}
+
+.col-span-3 {
+    grid-column: span 4;
+}
+
+.row-start-2 {
+    grid-row-start: 3;
+}
+
+input[type="text"] {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-right: 15px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.2);
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #357abd;
+}
+
+/* Resultados */
+.results {
+    margin-top: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Tabla de resumen */
+.cart-summary table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.cart-summary th, .cart-summary td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.cart-summary th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    color: #333;
+}
+
+.cart-summary tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.cart-summary .total {
+    margin-top: 15px;
+    margin-right: 60px;
+    text-align: right;
+    font-size: 18px;
+    color: #333;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 120px;
+    margin: 0 auto;
+}
+.quantity-selector button {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.quantity-selector button:hover {
+    background-color: #e5e7eb;
+}
+
+.quantity-selector button:active {
+    background-color: #d1d5db;
+}
+
+.quantity-selector input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    width: 40px;
+    text-align: center;
+    border: 1px solid #d1d5db;
+    padding: 4px 0;
+    border: none;
+}
+
+.quantity-selector input[type="number"]::-webkit-inner-spin-button,
+.quantity-selector input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.remove-item-btn {
+    padding: 10px;
+    background-color: #ff4d4d;
+    color: white;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.remove-item-btn:hover {
+    background-color: #ff1a1a;
+}
+
+.venta{
+    margin-top: 15px;
+    margin-right: 90px;
+    text-align: right;
+}
+
+.submit-btn {
+    padding: 10px;
+    background-color: #1a9b00;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #167a01;
+}
+
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    animation: fadeInOut 3s ease forwards;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-toast {
+    background-color: #28a745;
+}
+
+.error-toast {
+    background-color: #dc3545;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    10%, 90% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+
+
+.action-btn {
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-items: center;
+    font-size: 18px;
+}
+
+.action-btn:hover {
+    background-color: #45a049;
+}
+
+#pdfContent {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+#pdfContent table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#pdfContent th, #pdfContent td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#pdfContent th {
+    background-color: #f2f2f2;
+}
+
+.cliente-info {
+    margin-top: 20px;
+}
+
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5); 
+    padding-top: 60px; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente similar a Windows */
+    align-content: center;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 5% auto; 
+    padding: 20px;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    width: 50%; 
+    max-width: 600px; /* Ancho máximo */
+    animation: fadeIn 0.3s; /* Animación de entrada */
+    
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.show {
+    display: block;
+}

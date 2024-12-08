@@ -1,0 +1,208 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/assets/fondo.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    z-index: -1;
+}
+
+.wrapper {
+    width: 420px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(9px);
+    color: #fff;
+    border-radius: 12px;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+    margin-top: 80px;
+}
+
+.wrapper h1 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.wrapper .input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    font-size: 16px;
+    color: #fff;
+    padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.wrapper .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: 15px 0 20px;
+}
+
+.remember-forgot label input {
+    accent-color: #fff;
+    margin-right: 3px;
+}
+
+.remember-forgot a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.wrapper .btn:hover {
+    background-color: #f0f0f0;
+}
+
+.wrapper .btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+    border-radius: 50%;
+    /* Hace que la imagen sea redonda */
+    object-fit: cover;
+    /* Asegura que la imagen llene el área circular */
+}
+
+.message,
+.error-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.error-message {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ffffff;
+}
+
+.message:not(.error-message) {
+    background-color: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+}
+
+/* Estilos adicionales para mejorar la responsividad */
+@media (max-width: 480px) {
+    .wrapper {
+        width: 100%;
+        border-radius: 0;
+        padding: 20px;
+    }
+
+    .wrapper h1 {
+        font-size: 28px;
+    }
+
+    .input-box input {
+        font-size: 14px;
+    }
+
+    .remember-forgot {
+        font-size: 12px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+}
+
+/* Animaciones para mejorar la experiencia del usuario */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.wrapper {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.input-box input:focus {
+    border-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}

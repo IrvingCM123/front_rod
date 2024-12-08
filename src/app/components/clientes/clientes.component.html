@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Clientes</title>
+    <link rel="stylesheet" href="clientes.component.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <app-header></app-header>
+        <app-nav-bar></app-nav-bar>
+
+        <div class="clientes-container">
+            <!-- Formulario de Registro de Clientes -->
+            <div class="form-container">
+                <h2>Registrar Cliente</h2>
+                <form #clientForm="ngForm" (ngSubmit)="registerClient(clientForm)" class="grid-container">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input id="name" type="text" [(ngModel)]="client.name" name="name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Teléfono</label>
+                        <input id="phone" type="tel" [(ngModel)]="client.phone" name="phone" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Dirección</label>
+                        <input id="address" type="text" [(ngModel)]="client.address" name="address" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo</label>
+                        <input id="email" type="email" [(ngModel)]="client.email" name="email" required />
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="submit-btn">Registrar Cliente</button>
+                    </div>
+                </form>
+
+                <!-- Toast Notification -->
+                <div class="toast" *ngIf="showToast"
+                    [ngClass]="{ 'success-toast': isSuccess, 'error-toast': !isSuccess }">
+                    <span>{{ toastMessage }}</span>
+                </div>
+            </div>
+
+            <!-- Tabla de Clientes -->
+            <div class="list-container">
+                <h2>Lista de Clientes</h2>
+                <table class="client-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Dirección</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let client of clients">
+                            <td>{{ client.name }}</td>
+                            <td>{{ client.phone }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.address }}</td>
+                            <td>
+                                <button class="action-btn" (click)="editClient(client)">Editar</button>
+                                <button class="action-btn" (click)="deleteClient(client)">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

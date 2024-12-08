@@ -1,0 +1,31 @@
+/* Estilos para el encabezado */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: -webkit-linear-gradient(30deg, #057ecd, #00215f);
+    color: white;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.logo-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.logo span {
+    color: #ffffff;
+}
+
+.user-info {
+    font-size: 1.3rem;
+}

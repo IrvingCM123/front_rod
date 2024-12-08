@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Productos</title>
+    <link rel="stylesheet" href="productos.component.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <app-header></app-header>
+        <app-nav-bar></app-nav-bar>
+
+        <div class="product-container">
+            <!-- Formulario de Registro de Clientes -->
+            <div class="form-container">
+                <h2>Registrar Producto</h2>
+                <form #productForm="ngForm" (ngSubmit)="registerProduct(productForm)" class="grid grid-cols-4 gap-4">
+                    <div class="form-group col-span-1">
+                        <label for="productName">Nombre del Producto</label>
+                        <input id="productName" type="text" [(ngModel)]="product.name" name="name" required />
+                    </div>
+                    <div class="form-group col-span-1">
+                        <label for="productPrice">Precio del Producto</label>
+                        <input id="productPrice" type="number" [(ngModel)]="product.price" name="price" required />
+                    </div>
+                    <div class="form-group col-span-1">
+                        <label for="productQuantity">Cantidad por Almacenar</label>
+                        <input id="productQuantity" type="number" [(ngModel)]="product.quantity" name="quantity"
+                            required />
+                    </div>
+                    <div class="col-span-3">
+                        <button type="submit" class="submit-btn">Registrar Producto</button>
+                    </div>
+                </form>
+
+
+                <!-- Toast Notification -->
+                <div class="toast" *ngIf="showToast"
+                    [ngClass]="{ 'success-toast': isSuccess, 'error-toast': !isSuccess }">
+                    <span>{{ toastMessage }}</span>
+                </div>
+            </div>
+
+            <!-- Tabla de Clientes -->
+            <div class="list-container">
+                <h2>Lista de Productos</h2>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre del Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of products">
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.price | currency }}</td>
+                            <td>{{ product.quantity }}</td>
+                            <td>
+                                <button class="action-btn" (click)="editProduct(product)">Editar</button>
+                                <button class="action-btn" (click)="deleteProduct(product)">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

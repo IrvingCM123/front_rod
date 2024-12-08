@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+}
+
+
+.contenedor {
+    height: 100vh;
+    background: linear-gradient(to bottom, #ffffff, rgba(216, 243, 255, 1));
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+}
