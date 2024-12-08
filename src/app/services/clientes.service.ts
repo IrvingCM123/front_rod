@@ -48,6 +48,8 @@ export class ClientesService {
         httpStatusCode: 500,
         mensajeRespuesta: 'Error al consultar clientes'
       }
+
+      return respuesta;
     }
   }
 

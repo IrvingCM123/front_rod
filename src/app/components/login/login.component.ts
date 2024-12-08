@@ -25,8 +25,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Inicialización adicional
+    const token = await localStorage.getItem('Token');
+
+    if (token) {
+      localStorage.removeItem('Token')
+      console.log('token eliminado');
+    } else {
+      console.log('No hay token')
+    }
   }
 
   togglePasswordVisibility() {
