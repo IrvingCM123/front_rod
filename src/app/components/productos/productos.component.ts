@@ -24,10 +24,18 @@ export class ProductosComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.products = await this.productosService.getProducts() ?? [];
+    const token = await localStorage.getItem('Token');
+    if (token) {
+      this.products = await this.obtenerProductos();
+    } else {
+      this.products = []
+    }
   }
 
   // Lista de productos
-
+  async obtenerProductos() {
+    return await this.productosService.getProducts() ?? [];
+  }
 
   // Variables para notificaciones (toast)
   showToast = false;

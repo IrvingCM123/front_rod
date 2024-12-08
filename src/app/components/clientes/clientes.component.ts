@@ -25,7 +25,13 @@ export class ClientesComponent implements OnInit {
   clients: any
 
   async ngOnInit(): Promise<void> {
-    this.clients = await this.clientesService.getClients() ?? [];
+
+    const token = await localStorage.getItem('Token');
+    if (token) {
+      this.clients = await this.obtenerClientes();
+    } else {
+      this.clients = []
+    }
   }
 
   // Variables para notificaciones (toast)
@@ -34,6 +40,10 @@ export class ClientesComponent implements OnInit {
   toastMessage = '';
 
   constructor(private clientesService: ClientesService) { }
+
+  async obtenerClientes() {
+    return await this.clientesService.getClients() ?? [];
+  }
 
   // Método para registrar un cliente
   async registerClient(clientForm: any) {
