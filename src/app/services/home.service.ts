@@ -18,7 +18,6 @@ export class HomeService {
 
   constructor(private http: HttpClient) { }
 
-  // Obtener lista de clientes
   async getVentas() {
 
     const token = localStorage.getItem('Token')
@@ -38,7 +37,7 @@ export class HomeService {
     } catch (error) {
       const respuesta: response = {
         httpStatusCode: 500,
-        mensajeRespuesta: 'Error al consultar clientes'
+        mensajeRespuesta: 'Error al consultar ventas'
       }
 
 	  return respuesta;
@@ -81,7 +80,7 @@ export class HomeService {
     } catch (error) {
       const response: response = {
         httpStatusCode: 500,
-        mensajeRespuesta: 'Error al almacenar cliente'
+        mensajeRespuesta: 'Error al almacenar venta'
       }
       return response;
     }
