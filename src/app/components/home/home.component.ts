@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientesService } from '../../services/clientes.service';
 import { ProductosService } from '../../services/productos.service';
+import { HomeService } from 'src/app/services/home.service';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -12,6 +13,7 @@ interface Client {
 }
 
 interface Product {
+  producto_ID: string,
   name: string;
   price: number;
   quantity: number;
@@ -20,6 +22,11 @@ interface Product {
 interface CartItem extends Product {
   cartQuantity: number;
   total: number;
+}
+
+interface response {
+  httpStatusCode: string | number;
+  mensajeRespuesta: string | any;
 }
 
 @Component({
@@ -50,7 +57,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private clientesService: ClientesService,
-    private productosService: ProductosService
+    private productosService: ProductosService,
+    private homeService: HomeService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -127,34 +135,44 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  realizarVenta(): void {
+  async realizarVenta(): Promise<void> {
     if (this.cartItems.length === 0) {
       this.showToastMessage('El carrito está vacío. Agrega productos antes de realizar la venta.', false);
       return;
     }
+
+    const cantidadTotal = this.cartItems.reduce((acc, item) => acc + item.cartQuantity, 0);
 
     this.ultimaVenta = {
       productos: this.cartItems.map(item => ({
         nombre: item.name,
         cantidad: item.cartQuantity,
         precioUnitario: item.price,
-        total: item.total
+        total: item.total,
+        producto_ID: item.producto_ID
       })),
       totalVenta: this.cartTotal,
-      cliente: this.selectedClient
+      cliente: this.selectedClient,
+      totalProductos: cantidadTotal
     };
 
-    // Aquí normalmente enviarías esta información a tu backend
-    console.log('Información de la venta:', this.ultimaVenta);
+    const response: response = await this.homeService.addVentas(this.ultimaVenta);
 
-    // Limpia el carrito después de la venta
-    this.cartItems = [];
-    this.updateCartTotal();
-    this.selectedClient = null;
+    if (response.httpStatusCode == 500) {
+      alert(response.mensajeRespuesta);
+    }
 
-    this.ventaRealizada = true;
-    this.openModal();
-    this.showToastMessage('Venta realizada con éxito', true);
+    if (response.httpStatusCode == 201) {
+      alert(response.mensajeRespuesta);
+      this.cartItems = [];
+      this.updateCartTotal();
+      this.selectedClient = null;
+
+      this.ventaRealizada = true;
+      this.openModal();
+      //window.location.reload();
+    }
+
   }
 
   openModal(): void {
